@@ -9,9 +9,9 @@ from loguru import logger
 
 logger.add('debug.log', format='{time} {level} {message}', level='DEBUG', enqueue=True)
 
-#bundle_dir = sys._MEIPASS if hasattr(sys, '_MEIPASS') else os.path.abspath(os.path.dirname(__file__))
-#path_to_unrar = os.path.join(bundle_dir, 'unrar.exe')
-path_to_unrar = r'"unrar.exe"'
+bundle_dir = sys._MEIPASS if hasattr(sys, '_MEIPASS') else os.path.abspath(os.path.dirname(__file__))
+path_to_unrar = os.path.join(bundle_dir, 'unrar.exe')
+#path_to_unrar = r'"unrar.exe"'
 
 
 def get_struct(archname: str, path_to_unrar: str) -> list:
@@ -70,7 +70,7 @@ def unrar_with_struct(archname:str, outfolder:str, path_to_unrar: str, passwords
     for pwd in passwords:
         cmdline = fr'{path_to_unrar} x -p{pwd} -r -ibck -o+ -y "{archname}" *.txt "{outfolder}"' #first_command full work
 
-        print(cmdline)
+        #print(cmdline)
         x = subprocess.run(cmdline, shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.PIPE, universal_newlines=True, check=False)
 
         if 'Total errors: ' in x.stdout:
