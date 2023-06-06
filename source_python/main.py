@@ -2,6 +2,7 @@ import os
 import sys
 import shutil
 import subprocess
+import zipfile
 
 import random
 
@@ -9,9 +10,26 @@ from loguru import logger
 
 logger.add('debug.log', format='{time} {level} {message}', level='DEBUG', enqueue=True)
 
-bundle_dir = sys._MEIPASS if hasattr(sys, '_MEIPASS') else os.path.abspath(os.path.dirname(__file__))
-path_to_unrar = os.path.join(bundle_dir, 'unrar.exe')
-#path_to_unrar = r'"unrar.exe"'
+#bundle_dir = sys._MEIPASS if hasattr(sys, '_MEIPASS') else os.path.abspath(os.path.dirname(__file__))
+#path_to_unrar = os.path.join(bundle_dir, 'unrar.exe')
+path_to_unrar = r'"unrar.exe"'
+
+def unzip(archive: str, path_save: str, pwds: list):
+
+    with zipfile.ZipFile(archive) as z:
+        for pwd in pwds:
+            try:
+                count = 0
+                for info in z.infolist():
+                    if not os.path.isdir(info.filename):
+                        if info.filename[-4:] != '.txt': continue
+                        count += 1
+                        z.extract(info.filename, path=path_save, pwd=pwd)
+                logger.opt(colors=True).info(f'<green>[{archive}] Извлечено {count} из {count} [password - {pwd}]</green>')
+                return True
+            except Exception as e:
+                logger.exception(e)
+        return False
 
 
 def get_struct(archname: str, path_to_unrar: str) -> list:
@@ -70,7 +88,7 @@ def unrar_with_struct(archname:str, outfolder:str, path_to_unrar: str, passwords
     for pwd in passwords:
         cmdline = fr'{path_to_unrar} x -p{pwd} -r -ibck -o+ -y "{archname}" *.txt "{outfolder}"' #first_command full work
 
-        #print(cmdline)
+        print(cmdline)
         x = subprocess.run(cmdline, shell=True, stderr=subprocess.DEVNULL, stdout=subprocess.PIPE, universal_newlines=True, check=False)
 
         if 'Total errors: ' in x.stdout:
@@ -148,6 +166,9 @@ def main():
     else: pwds = ['0']
 
     for archivez in os.listdir(archive):
+        if archivez.endswith('.zip'):
+            if unzip(f'{archive}\\{archivez}', path_save=path_save, pwds=pwds): continue
+
         unrar_with_struct(archname=f'{archive}\\{archivez}', outfolder=path_save, path_to_unrar=path_to_unrar, passwords=pwds)
     delete_subfolder(path_save) # удаляет лишние подпапки
     if mode == 'n':
