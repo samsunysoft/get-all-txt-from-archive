@@ -78,24 +78,24 @@ def unrar_with_struct(archname:str, outfolder:str, path_to_unrar: str, passwords
             files_unrar += total_unrar
             if files > files_unrar:
                 if total_unrar < 1:
-                    logger.opt(colors=True).info(f'<red>Неверный пароль [{pwd}]</red>')
+                    logger.opt(colors=True).info(f'<red>[{archname}] Неверный пароль [{pwd}]</red>')
                     continue
-                logger.opt(colors=True).info(f'<green>Извлечено {files_unrar} из {files} файлов [password - {pwd}]</green>')
+                logger.opt(colors=True).info(f'<green>[{archname}] Извлечено {files_unrar} из {files} файлов [password - {pwd}]</green>')
                 true_passwords.append(pwd)
                 continue
 
             else:
                 true_passwords.append(pwd)
-                logger.opt(colors=True).info(f'<green>Извлечено {files} из {files} файлов с паролями:</green>')
-                logger.opt(colors=True).info(f'<green>passwords - {true_passwords}</green>')
+                logger.opt(colors=True).info(f'<green>[{archname}] Извлечено {files} из {files} файлов с паролями:</green>')
+                logger.opt(colors=True).info(f'<green>[{archname}] passwords - {true_passwords}</green>')
                 return
 
-        logger.opt(colors=True).info(f'<green>Извлечено {files} из {files} файлов [password - {pwd}]</green>')
+        logger.opt(colors=True).info(f'<green>[{archname}] Извлечено {files} из {files} файлов [password - {pwd}]</green>')
         break
     else:
-        logger.info(f'Извлечено {files_unrar} из {files}')
+        logger.info(f'[{archname}] Извлечено {files_unrar} из {files}')
         if len(true_passwords) > 0:
-            logger.info(f'Валидные пароли: {true_passwords}')
+            logger.info(f'[{archname}] Валидные пароли: {true_passwords}')
 
 
 def main():
@@ -103,9 +103,9 @@ def main():
     if len(sys.argv) > 1:
         archive = sys.argv[1]
     else:
-        archive = input('Введите путь до архива: ')
+        archive = input('Путь к папке с архивом(ами): ')
     if not os.path.exists(archive):
-        print(f'Архив по пути: {archive} не найден!')
+        print(f'Путь к папке с архивом(ами): {archive} не найден!')
         input('Программа завершена')
         exit()
 
@@ -113,7 +113,8 @@ def main():
     brute_pass = input('Подбирать пароль? (y/n): ').lower()
 
     if brute_pass == 'y':
-        path_pwds = input('Введите путь до текстовика с паролями: ')
+        path_pwds = input('Введите путь до текстовика с паролями (можно без .txt): ')
+        if path_pwds[-4:] != '.txt': path_pwds += '.txt'
         if not os.path.exists(path_pwds):
             print(f'Текстовик с паролями по пути: {archive} не найден!')
             input('Программа завершена')
@@ -146,8 +147,9 @@ def main():
     if brute_pass == 'y': pwds = [pwd.strip() for pwd in open(path_pwds, 'r', encoding='utf-8').readlines()]
     else: pwds = ['0']
 
-    unrar_with_struct(archname=archive, outfolder=path_save, path_to_unrar=path_to_unrar, passwords=pwds)
-    delete_subfolder(path_save)
+    for archivez in os.listdir(archive):
+        unrar_with_struct(archname=f'{archive}\\{archivez}', outfolder=path_save, path_to_unrar=path_to_unrar, passwords=pwds)
+    delete_subfolder(path_save) # удаляет лишние подпапки
     if mode == 'n':
         delete_structure(path_save)
 
