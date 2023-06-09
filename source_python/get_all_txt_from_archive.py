@@ -4,16 +4,14 @@ import shutil
 import subprocess
 import ctypes
 
-ctypes.windll.kernel32.SetConsoleTitleA("Разработчик - Samusuny [zelenka.guru/samsuny/, telegram @Toxenskiy]")
-
 import random
 
 from loguru import logger
 
 logger.add('debug.log', format='{time} {level} {message}', level='DEBUG', enqueue=True)
 
-# bundle_dir = sys._MEIPASS if hasattr(sys, '_MEIPASS') else os.path.abspath(os.path.dirname(__file__))
-#
+bundle_dir = sys._MEIPASS if hasattr(sys, '_MEIPASS') else os.path.abspath(os.path.dirname(__file__))
+
 # if sys.maxsize > 2**32:
 #     path_to_winrar = os.path.join(bundle_dir, "winz64\\winrar.exe")
 #
@@ -97,7 +95,7 @@ def unrar_with_struct(archname:str, outfolder:str, path_to_unrar: str, passwords
 
 def main():
     # получаем путь к архиву
-    print("Разработчик - Samusuny [zelenka.guru/samsuny/, telegram @Toxenskiy]")
+    print("Developer - Samusuny [zelenka.guru/samsuny/, telegram @Toxenskiy]")
     if len(sys.argv) > 1:
         archive = sys.argv[1]
     else:
@@ -156,5 +154,7 @@ def main():
 
 
 if __name__ == "__main__":
+    os.system('title ' + 'Developer - Samusuny [zelenka.guru/samsuny/, telegram @Toxenskiy]')
+    #ctypes.windll.kernel32.SetConsoleTitleA("Developer - Samusuny [zelenka.guru/samsuny/, telegram @Toxenskiy]")
     main()
     #unrar_with_struct(archname='', outfolder='seks', path_to_unrar=path_to_unrar, passwords=[])
