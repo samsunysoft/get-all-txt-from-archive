@@ -2,6 +2,9 @@ import os
 import sys
 import shutil
 import subprocess
+import ctypes
+
+ctypes.windll.kernel32.SetConsoleTitleA("Разработчик - Samusuny [zelenka.guru/samsuny/, telegram @Toxenskiy]")
 
 import random
 
@@ -94,6 +97,7 @@ def unrar_with_struct(archname:str, outfolder:str, path_to_unrar: str, passwords
 
 def main():
     # получаем путь к архиву
+    print("Разработчик - Samusuny [zelenka.guru/samsuny/, telegram @Toxenskiy]")
     if len(sys.argv) > 1:
         archive = sys.argv[1]
     else:
@@ -141,8 +145,10 @@ def main():
     # извлекам архив
     if brute_pass == 'y': pwds = [pwd.strip() for pwd in open(path_pwds, 'r', encoding='utf-8').readlines()]
     else: pwds = []
-
+    zxc = input('Вы уверены, что указали параметры правильно? Если да, то нажмите ENTER')
+    os.system('cls')
     for archivez in os.listdir(archive):
+        logger.info(f'Извлекаем {archivez}...')
         unrar_with_struct(archname=f'{archive}\\{archivez}', outfolder=path_save, path_to_unrar=path_to_unrar, passwords=pwds)
     delete_subfolder(path_save) # удаляет лишние подпапки
     if mode == 'n':
