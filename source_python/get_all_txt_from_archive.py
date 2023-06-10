@@ -15,7 +15,7 @@ logger.add('debug.log', format='{time} {level} {message}', level='DEBUG', enqueu
 # if sys.maxsize > 2 ** 32:
 #     path_to_winrar = os.path.join(bundle_dir, "winz64\\winrar.exe")
 #
-# if sys.maxsize > 2 ** 32:
+# else:
 #     path_to_winrar = os.path.join(bundle_dir, "winz32\\winrar.exe")
 #
 # path_to_unrar = f'"{path_to_winrar}"'
@@ -101,11 +101,13 @@ def unrar_with_struct(archname: str, outfolder: str, path_to_unrar: str, passwor
                 logger.opt(colors=True).info(
                     f'<green>[{archname}] Успешно извлечён [пароль - {"нет" if pwd == "zkzkzkzkz" else pwd}]</green>')
                 break
-            elif folder_size_start*1.05 >= folder_size_new:
+
+            #elif folder_size_new - folder_size_start <= archive_size * 0.1:
+            else:
                 logger.opt(colors=True).info(f'<red>[{archname}] Неверный пароль [{pwd}]</red>')
 
         else:
-            if folder_size_new >= folder_size_start*1.05:
+            if folder_size_new - folder_size_start > archive_size * 0.2:
                 logger.opt(colors=True).info(f'<red>[{archname}] Извлечён не полностью</red>')
             else:
                 logger.opt(colors=True).info(f'<red>[{archname}] Не удалось сбрутить</red>')
