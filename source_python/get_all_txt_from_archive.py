@@ -24,7 +24,7 @@ logger.add('debug.log', format='{time} {level} {message}', level='DEBUG', enqueu
 if sys.maxsize > 2**32:
     path_to_unrar = '"winz64\\winrar.exe"'
 
-if sys.maxsize > 2**32:
+else:
     path_to_unrar = '"winz32\\winrar.exe"'
 
 
