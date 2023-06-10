@@ -97,7 +97,7 @@ def unrar_with_struct(archname: str, outfolder: str, path_to_unrar: str, passwor
                                universal_newlines=True, check=False)
 
             folder_size_new = get_folder_size(outfolder)
-            if folder_size_new - folder_size_start >= archive_size * 0.95:
+            if folder_size_new - folder_size_start >= archive_size * 0.3:
                 logger.opt(colors=True).info(
                     f'<green>[{archname}] Успешно извлечён [пароль - {"нет" if pwd == "zkzkzkzkz" else pwd}]</green>')
                 break
@@ -107,7 +107,7 @@ def unrar_with_struct(archname: str, outfolder: str, path_to_unrar: str, passwor
                 logger.opt(colors=True).info(f'<red>[{archname}] Неверный пароль [{pwd}]</red>')
 
         else:
-            if folder_size_new - folder_size_start > archive_size * 0.2:
+            if folder_size_new - folder_size_start > archive_size * 0.1:
                 logger.opt(colors=True).info(f'<red>[{archname}] Извлечён не полностью</red>')
             else:
                 logger.opt(colors=True).info(f'<red>[{archname}] Не удалось сбрутить</red>')
