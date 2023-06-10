@@ -46,7 +46,7 @@ def delete_subfolder(path_source: str):
                 items = list_dir
                 for item in items:
                     source_item_path = os.path.join(source_folder, item)
-                    destination_item_path = os.path.join(path_source + str(random.randint(1,999)), item)
+                    destination_item_path = os.path.join(path_source, item + str(random.randint(1,999)))
                     try:
                         shutil.move(source_item_path, destination_item_path)
                     except:
